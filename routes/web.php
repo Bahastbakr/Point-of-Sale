@@ -19,8 +19,14 @@ Route::get('/', function () {
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
 
 Route::get('/products/create', [App\Http\Controllers\ProductController::class, 'create'])->name('product.create');
+Route::get('/products/{id}', [App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
+Route::delete('/products/{id}', [App\Http\Controllers\ProductController::class, 'destroy'])->name('product.destroy');
+Route::put('/products/{id}', [App\Http\Controllers\ProductController::class, 'update'])->name('product.update');
+
 Route::post('/products', [App\Http\Controllers\ProductController::class, 'store'])->name('product.store');
 
-Auth::routes();
+Auth::routes([
+    'register' => false
+]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

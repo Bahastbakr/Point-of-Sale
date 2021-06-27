@@ -5,7 +5,6 @@ use Carbon\Carbon as time;
 @endphp
 
 @section('content')
-
     <div class="container">
         <h3>زیادکردنی شتوومەک</h3>
         <form action="{{ route('product.index') }}" method="POST" class="m-4">

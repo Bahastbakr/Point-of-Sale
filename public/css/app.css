@@ -3245,6 +3245,17 @@ fieldset:disabled .btn {
     background-color: #6c757d;
     border-color: #6c757d
 }
+.btn-accent{
+    color: #fff;
+    background-color: #0ecec4;
+    border-color: #0ecec4
+}
+.btn-accent:hover{
+    color: #fff;
+    background-color: #0db4ac;
+    border-color: #0db4ac
+}
+
 
 .btn-success {
     color: #fff;
