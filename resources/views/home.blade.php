@@ -12,13 +12,15 @@
             </div>
         </a>
 
-        <div class="card text-center m-2" style="width: 18rem;">
-            <div class="card-body">
-                <h1 class="text-center"><i class="fas fa-cash-register"></i></h1>
-                <h5 class="card-title text-center">فرۆشتنی شتوومەک</h5>
+        <a href="{{ route('product.sell') }}">
+            <div class="card text-center m-2" style="width: 18rem;">
+                <div class="card-body">
+                    <h1 class="text-center"><i class="fas fa-cash-register"></i></h1>
+                    <h5 class="card-title text-center">فرۆشتنی شتوومەک</h5>
 
+                </div>
             </div>
-        </div>
+        </a>
         <div class="card text-center m-2" style="width: 18rem;">
             <div class="card-body">
                 <h1 class="text-center"><i class="fas fa-box"></i></h1>

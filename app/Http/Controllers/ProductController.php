@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
+
+use Response;
+
 
 class ProductController extends Controller
 {
@@ -47,19 +49,8 @@ class ProductController extends Controller
         $product->delete();
         return redirect('/products')->with('mssg_destroy', 'شتوومەکەکە سڕایەوە!');
     }
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        // $this->validate($request, [
-        //     'name' => 'required',
-        //     'barcode' => 'required',
-        //     'buyprice' => 'required',
-        //     'sellprice' => 'required',
-        //     'expireDate' => 'required',
-        //     'remainingQuantity' => 'required',
-        //     'boughtquantity' => 'required',
-        //     'expireDate' => 'required',
-        //     'vendor' => 'required',
-        // ]);
         $product = Product::findOrFail($id);
         $product->name = request('name');
         $product->barcode = request('barcode');
@@ -71,8 +62,22 @@ class ProductController extends Controller
         $product->expireDate = request('expiredate');
 
         $product->save();
-
-
         return redirect('/products' . '/' . $id)->with('mssg_updated', 'شتوومەکە بە سەرکەوتووی چاککرا');
+    }
+
+
+    public function sell()
+    {
+        return view('product.sell');
+    }
+    public function search_barcode($barcode)
+    {
+        $product = Product::where('barcode', $barcode)->get();
+        if ($product->isEmpty()) {
+            return "هیچ شتوومەکێک نەدۆزرایەوە";
+        } else {
+            $response['data'] = $product;
+            return Response::json($response);
+        }
     }
 }
