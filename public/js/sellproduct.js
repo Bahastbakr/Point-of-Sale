@@ -3,8 +3,8 @@ function getTotal() {
     $("#products tr").each(function () {
         var quantity = $(this).find(".quantity").text()
         var price = $(this).find(".price").text();
-       var  totalAll=parseInt(price)*parseInt(quantity);
-       total_array.push(totalAll)
+        var totalAll = parseInt(price) * parseInt(quantity);
+        total_array.push(totalAll)
 
     });
     total_array.shift()
@@ -12,9 +12,10 @@ function getTotal() {
     for (var i = 0; i < total_array.length; i++) {
         total += total_array[i] << 0;
     }
-    $("#total").text(total+" ");
-
+    $("#total").text(total + " ");
 }
+
+
 $(function () {
     $(".search_product").click(function () {
         var barcode = $("#number").val()
@@ -23,7 +24,24 @@ $(function () {
             type: 'get',
             dataType: 'json',
             success: function (response) {
-
+                if(!Object.keys(response.data).length){
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                          toast.addEventListener('mouseenter', Swal.stopTimer)
+                          toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                      })
+                      
+                      Toast.fire({
+                        icon: 'error',
+                        title: 'ببورە ئەم شتوومەکە بوونی نییە'
+                      })
+                }
                 for (var i = 0; i < response['data'].length; i++) {
                     var id = response['data'][i].id;
                     var name = response['data'][i].name;
@@ -31,22 +49,55 @@ $(function () {
 
                     var tr_str =
                         "<tr>" +
+                        "<td class='d-none id'>" + id + "</td>" +
                         "<td>" + name + "</td>" +
                         "<td class='price'>" + sellprice + "</td>" +
                         "<td class='w-100 text-center'>" + "<span>" + "<button class='plus btn btn-primary'> <i class='fa fa-plus' aria-hidden='true'> </i> </button>" + "<span class='quantity h6 ps-5 pe-5'> 1 </span>" + "<button class='minus btn btn-danger'> <i class='fa fa-minus' aria-hidden='true'> </i> </button>" + "</span>" + "</td>" +
                         "   <td> <button class='btn remove btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button></td>" +
                         "</tr>";
 
-                    $("#products tbody").append(tr_str);
-                    $("#added_products").text($("#products  tbody  tr").length) + 1;
-                    getTotal()                    
-                    
-                    
-                 
+                    if ($("#products tbody tr").length == 0) {
+                        $("#products tbody").append(tr_str);
+                        $("#added_products").text($("#products  tbody  tr").length) + 1;
+                        getTotal()
+                        $("#sell").show();
 
+                    } else {
+                        var flag = 0;
+                        var current_row;
+                        $("#products tbody tr").each(function () {
+                            var id_exist = $(this).find(".id").text()
+                            if (id == id_exist) {
+                                flag = 1;
+                                current_row = $(this);
+                            }
+                        });
+                        if (flag == 1) {
+                            var quantity_exist = current_row.find(".quantity").text()
+                            var newQuantity = parseInt(quantity_exist) + 1;
+                            var new_row =
+                                "<tr>" +
+                                "<td class='d-none id'>" + id + "</td>" +
+                                "<td>" + name + "</td>" +
+                                "<td class='price'>" + sellprice + "</td>" +
+                                "<td class='w-100 text-center'>" + "<span>" + "<button class='plus btn btn-primary'> <i class='fa fa-plus' aria-hidden='true'> </i> </button>" + "<span class='quantity h6 ps-5 pe-5'>" + newQuantity + "</span>" + "<button class='minus btn btn-danger'> <i class='fa fa-minus' aria-hidden='true'> </i> </button>" + "</span>" + "</td>" +
+                                "   <td> <button class='btn remove btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button></td>" +
+                                "</tr>";
+                            current_row.replaceWith(new_row);
+                            getTotal()
+                        } else {
+                            $("#products tbody").append(tr_str);
+                            $("#added_products").text($("#products  tbody  tr").length) + 1;
+                            getTotal()
+                            $("#sell").show();
+
+                        }
+
+                    }
                 }
             }
         });
+
     });
 
     $('input[type="number"]')[0].focus();
@@ -106,6 +157,7 @@ $(function () {
     });
     $("#clear").click(function () {
         $("#number").val("")
+
     });
     $("#erase").click(function () {
         $("#number").val(
@@ -126,6 +178,12 @@ $(function () {
         var quantity = +$(this).prev().text();
         var newQuantity = quantity - 1;
         $(this).prev().text(newQuantity);
+        if ($(this).prev().text() == 0) {
+            $(this).parent().parent().parent().remove()
+            $("#sell").hide()
+            $("#added_products").text(0);
+
+        }
         getTotal()
     });
 
@@ -133,9 +191,28 @@ $(function () {
         $(this).closest("tr").remove();
         $("#added_products").text($("#products  tbody  tr").length) - 1;
         getTotal()
+        if ($("#products  tbody  tr").length == 0) {
+            $("#sell").hide()
+            $("#added_products").text(0);
+        }
+
     });
-
-
-
-
+    $("#sell").click(function () {
+        var total=$("#total").text();
+        $.ajaxSetup({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+          });
+        $.ajax({
+            url: '/transaction',
+            type: 'post',
+            dataType: 'JSON',
+            data:total,
+            success: function (response) {
+                console.log(response);
+            }
+        });
+    });
+    
 });

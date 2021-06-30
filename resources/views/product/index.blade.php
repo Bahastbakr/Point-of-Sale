@@ -2,17 +2,10 @@
 
 @section('content')
 
-    @if (!empty(session('mssg')))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('mssg') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+
     @if (!empty(session('mssg_destroy')))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('mssg_destroy') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        {{ session('mssg_destroy') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     @endif
 
 

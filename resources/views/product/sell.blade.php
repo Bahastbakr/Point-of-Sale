@@ -8,6 +8,7 @@
                 <div class=" form-group ">
                     <input type="number" id="number" class="form-control " placeholder="بارکۆد">
                 </div>
+
                 <br>
 
                 <div class="d-flex flex-row flex-wrap justify-content-center">
@@ -37,6 +38,8 @@
                     </h5>
                     <h5>کۆی گشتی : <span id="total"> 0 </span>IQD</h5>
                 </div>
+                <button style="display: none;" id="sell" class="btn btn-success">بیفرۆشە</button>
+
                 <table id="products" class="table ">
                     <thead>
                         <th>ناو</th>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use RealRashid\SweetAlert\Facades\Alert;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,9 @@ Route::get('/product/sell/{barcode}', [App\Http\Controllers\ProductController::c
 Auth::routes([
     'register' => false
 ]);
+
+// transaction
+Route::post('/transaction', [App\Http\Controllers\TransactionController::class, 'store'])->name('transaction.store');
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

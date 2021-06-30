@@ -3,12 +3,6 @@
 @section('content')
 
     <div class="container">
-        @if (!empty(session('mssg_updated')))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('mssg_updated') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
         <div class="d-flex flex-row justify-content-between">
             <h3>دەستکاری شتوومەک</h3>
             <form action="{{ route('product.update', $product->id) }}" method="POST">

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-
 use Response;
 
 
@@ -36,7 +35,7 @@ class ProductController extends Controller
         $product->expireDate = request('expiredate');
 
         $product->save();
-        return redirect('/products')->with('mssg', 'شتوومەکەکە زیادکرا!');
+        return redirect('/products')->with('toast_success', 'شتوومەکەکە زیادکرا!');
     }
     public function show($id)
     {
@@ -47,7 +46,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $product->delete();
-        return redirect('/products')->with('mssg_destroy', 'شتوومەکەکە سڕایەوە!');
+        return redirect('/products')->with('toast_success', 'شتوومەکەکە سڕایەوە!');
     }
     public function update($id)
     {
@@ -62,7 +61,7 @@ class ProductController extends Controller
         $product->expireDate = request('expiredate');
 
         $product->save();
-        return redirect('/products' . '/' . $id)->with('mssg_updated', 'شتوومەکە بە سەرکەوتووی چاککرا');
+        return redirect('/products' . '/' . $id)->with('toast_success', 'شتوومەکە بە سەرکەوتووی چاککرا');
     }
 
 
@@ -73,11 +72,7 @@ class ProductController extends Controller
     public function search_barcode($barcode)
     {
         $product = Product::where('barcode', $barcode)->get();
-        if ($product->isEmpty()) {
-            return "هیچ شتوومەکێک نەدۆزرایەوە";
-        } else {
-            $response['data'] = $product;
-            return Response::json($response);
-        }
+        $response['data'] = $product;
+        return Response::json($response);
     }
 }
