@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
+    'failed' => 'ئەم ئەکاونتە بوونی نییە ببورە ',
     'password' => 'ئەو پاسۆردەی لێتیاوە هەڵەیە !',
     'throttle' => 'هەوڵی زۆرت دا تکای چاوەڕێکە بۆ  :seconds سانییە.',
 

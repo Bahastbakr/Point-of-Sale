@@ -29,6 +29,8 @@ Route::post('/products', [App\Http\Controllers\ProductController::class, 'store'
 Route::get('/product/sell', [App\Http\Controllers\ProductController::class, 'sell'])->name('product.sell');
 Route::get('/product/sell/{barcode}', [App\Http\Controllers\ProductController::class, 'search_barcode']);
 
+
+
 // auth
 Auth::routes([
     'register' => false
@@ -36,6 +38,10 @@ Auth::routes([
 
 // transaction
 Route::post('/transaction', [App\Http\Controllers\TransactionController::class, 'store'])->name('transaction.store');
+Route::post('/transaction/transaction_details', [App\Http\Controllers\TransactionController::class, 'store_transaction_details'])->name('transaction.transaction_details');
+
+// inventory
+Route::get('/inventory', [App\Http\Controllers\InventoryController::class, 'index'])->name('inventory.index');
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

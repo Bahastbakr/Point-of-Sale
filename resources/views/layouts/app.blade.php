@@ -80,7 +80,7 @@
                                     </a>
                                     <a class="dropdown-item bg-danger text-white" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();        
-                                                                                                                                                                                                                                            document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                document.getElementById('logout-form').submit();">
                                         چوونەدەرەوە
                                     </a>
 
@@ -101,7 +101,9 @@
         </main>
     </div>
 
-    <script src="{{ asset('js/sellproduct.js') }}" defer></script>
+    <script src="{{ asset('js/sellproduct.js') }}" async></script>
+    <script src="{{ asset('js/inventory.index.js') }}" async></script>
+
     @include('sweetalert::alert')
 
 </body>

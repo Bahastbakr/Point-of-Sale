@@ -38,21 +38,23 @@
                     </h5>
                     <h5>کۆی گشتی : <span id="total"> 0 </span>IQD</h5>
                 </div>
-                <button style="display: none;" id="sell" class="btn btn-success">بیفرۆشە</button>
 
-                <table id="products" class="table ">
-                    <thead>
-                        <th>ناو</th>
-                        <th>نرخ</th>
-                        <th class="text-center">دانە</th>
-                        <th>کردارەکان</th>
+                <form method="post" id="product_form">
+                    @csrf
+                    <button type="submit" style="display: none;" id="sell" class="btn btn-success w-100">بیفرۆشە</button>
+                    <table id="products" class="table table-responsive">
+                        <thead>
+                            <th>ناو</th>
+                            <th>نرخ</th>
+                            <th class="text-center">دانە</th>
+                            <th>کردارەکان</th>
+                        </thead>
+                        <tbody>
 
-                    </thead>
-                    <tbody>
 
-
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
 

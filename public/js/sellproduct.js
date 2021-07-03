@@ -14,6 +14,13 @@ function getTotal() {
     }
     $("#total").text(total + " ");
 }
+function reset() {
+    $("#number").val("")
+    $("#total").text(0+" ")
+    $("#added_products").text("0")
+    $("#products tbody").empty()
+    $("#sell").hide()
+}
 
 
 $(function () {
@@ -24,7 +31,7 @@ $(function () {
             type: 'get',
             dataType: 'json',
             success: function (response) {
-                if(!Object.keys(response.data).length){
+                if (!Object.keys(response.data).length) {
                     const Toast = Swal.mixin({
                         toast: true,
                         position: 'top',
@@ -32,15 +39,15 @@ $(function () {
                         timer: 3000,
                         timerProgressBar: true,
                         didOpen: (toast) => {
-                          toast.addEventListener('mouseenter', Swal.stopTimer)
-                          toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
                         }
-                      })
-                      
-                      Toast.fire({
+                    })
+
+                    Toast.fire({
                         icon: 'error',
                         title: 'ببورە ئەم شتوومەکە بوونی نییە'
-                      })
+                    })
                 }
                 for (var i = 0; i < response['data'].length; i++) {
                     var id = response['data'][i].id;
@@ -49,10 +56,10 @@ $(function () {
 
                     var tr_str =
                         "<tr>" +
-                        "<td class='d-none id'>" + id + "</td>" +
-                        "<td>" + name + "</td>" +
-                        "<td class='price'>" + sellprice + "</td>" +
-                        "<td class='w-100 text-center'>" + "<span>" + "<button class='plus btn btn-primary'> <i class='fa fa-plus' aria-hidden='true'> </i> </button>" + "<span class='quantity h6 ps-5 pe-5'> 1 </span>" + "<button class='minus btn btn-danger'> <i class='fa fa-minus' aria-hidden='true'> </i> </button>" + "</span>" + "</td>" +
+                        "<td class='d-none id'>" + id + "<input type='hidden' name='pr_id[]' value='"+ id +"'/> </td>" +
+                        "<td>" + name + "<input name='pr_name[]' type='hidden' value='" + name +"'/></td>" +
+                        "<td class='price'>" + sellprice +  "<input type='hidden' name='pr_sellprice[]' type='hidden' value='" + sellprice +"'/> </td>" +
+                        "<td class='w-100 text-center'>" + "<span>" + "<button class='plus btn btn-success'> <i class='fa fa-plus' aria-hidden='true'> </i> </button>" + "<span class='quantity h6 ps-5 pe-5'> 1 <input type='hidden' name='pr_quantity[]' value='1'/> </span>" + "<button class='minus btn btn-danger'> <i class='fa fa-minus' aria-hidden='true'> </i> </button>" + "</span>" + "</td>" +
                         "   <td> <button class='btn remove btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button></td>" +
                         "</tr>";
 
@@ -77,10 +84,10 @@ $(function () {
                             var newQuantity = parseInt(quantity_exist) + 1;
                             var new_row =
                                 "<tr>" +
-                                "<td class='d-none id'>" + id + "</td>" +
-                                "<td>" + name + "</td>" +
-                                "<td class='price'>" + sellprice + "</td>" +
-                                "<td class='w-100 text-center'>" + "<span>" + "<button class='plus btn btn-primary'> <i class='fa fa-plus' aria-hidden='true'> </i> </button>" + "<span class='quantity h6 ps-5 pe-5'>" + newQuantity + "</span>" + "<button class='minus btn btn-danger'> <i class='fa fa-minus' aria-hidden='true'> </i> </button>" + "</span>" + "</td>" +
+                                "<td class='d-none id'>" + id + "<input type='hidden' name='pr_id[]' value='"+id+"'/> </td>" +
+                                "<td>" + name + "<input name='pr_name[]' type='hidden' value='" + name +"'/></td>" +
+                                "<td class='price'>" + sellprice +  "<input type='hidden' name='pr_sellprice[]' type='hidden' value='" + sellprice +"'/> </td>" +
+                                "<td class='w-100 text-center'>" + "<span>" + "<button class='plus btn btn-success'> <i class='fa fa-plus' aria-hidden='true'> </i> </button>" + "<span class='quantity h6 ps-5 pe-5'>" + newQuantity + "<input type='hidden' name='pr_quantity[]' value='" + newQuantity +"'/> </span>" + "<button class='minus btn btn-danger'> <i class='fa fa-minus' aria-hidden='true'> </i> </button>" + "</span>" + "</td>" +
                                 "   <td> <button class='btn remove btn-danger'><i class='fa fa-trash' aria-hidden='true'></i></button></td>" +
                                 "</tr>";
                             current_row.replaceWith(new_row);
@@ -165,7 +172,8 @@ $(function () {
                 return value.substr(0, value.length - 1);
             })
     });
-    $("tbody").on('click', ".plus", function () {
+    $("tbody").on('click', ".plus", function (event) {
+        event.preventDefault();
         var quantity = +$(this).next().text();
         var newQuantity = quantity + 1;
         $(this).next().text(newQuantity);
@@ -174,7 +182,8 @@ $(function () {
     });
 
 
-    $("tbody").on('click', ".minus", function () {
+    $("tbody").on('click', ".minus", function (event) {
+        event.preventDefault();
         var quantity = +$(this).prev().text();
         var newQuantity = quantity - 1;
         $(this).prev().text(newQuantity);
@@ -197,22 +206,59 @@ $(function () {
         }
 
     });
-    $("#sell").click(function () {
-        var total=$("#total").text();
+    $('#product_form').on('submit', function(event){
+        event.preventDefault();
+        var formdata = $(this).serialize();
+
+        var total = $("#total").text();
+
         $.ajaxSetup({
             headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-          });
+        });
         $.ajax({
             url: '/transaction',
             type: 'post',
             dataType: 'JSON',
-            data:total,
+            data: {
+                total: total
+            },
             success: function (response) {
-                console.log(response);
+
+                $.ajax({
+                    url: '/transaction/transaction_details',
+                    type: 'post',
+                    dataType:'JSON',
+                    data: {
+                        formdata:formdata,
+                        transaction_id:response
+                    },
+                    success: function (response1) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+    
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'فرۆشرا'
+                        })
+                        reset()
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                })
             }
         });
     });
-    
+
 });

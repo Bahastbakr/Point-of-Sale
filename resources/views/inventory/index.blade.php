@@ -2,18 +2,9 @@
 
 @section('content')
 
-
-    @if (!empty(session('mssg_destroy')))
-        {{ session('mssg_destroy') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    @endif
-
-
-
     <div class="container d-flex flex-row justify-content-between">
         <h3>شتوومەکەکان</h3>
         <input type="text" id="search" class="form-control w-25" placeholder="گەڕان">
-        <a href="{{ route('product.create') }}" class="btn btn-success text-white">زیادکردنی شتوومەک</a>
     </div>
     <br>
     <div class="container d-flex flex-row flex-wrap">
